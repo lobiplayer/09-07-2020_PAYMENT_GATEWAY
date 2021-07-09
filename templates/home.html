@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://js.braintreegateway.com/web/dropin/1.30.1/js/dropin.min.js"></script>
+</head>
+
+<body>
+    <div id="payment"></div>
+    <button id='braintree-button'>Send to braintree</button>
+    <form action="{{url_for('payment')}}" method="POST">
+        <input type="text" name='nonce' id='nonce-field'>
+        <input type="submit" value='Send nonce to backend'>
+    </form>
+
+    <script type='text/javascript'>
+
+        const braintreeButton = document.getElementById('braintree-button')
+
+        braintree.dropin.create({
+            container: document.getElementById("payment"),
+            authorization: "{{token}}"
+        }, (error, paymentForm) => {
+            braintreeButton.onclick = () => {
+                paymentForm.requestPaymentMethod((error, payload) => {
+                    document.getElementById('nonce-field').value = payload.nonce
+                })
+            }
+        })
+    </script>
+</body>
+
+</html>
+
+hello world
